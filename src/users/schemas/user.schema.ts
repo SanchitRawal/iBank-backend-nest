@@ -14,10 +14,10 @@ export class User {
  @Prop()
   lastName?: string;
 
- @Prop()
+ @Prop({required: true})
   password?: string;
 
-  @Prop({unique: true})
+  @Prop({required: true, unique: true})
   email?: string;
 
   @Prop({default: Role.Admin})

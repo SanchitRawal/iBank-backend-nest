@@ -1,8 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { RegisterDto } from 'src/auth/dto/registerUser.dto';
 import { User } from './schemas/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Error, Model } from 'mongoose';
 
 @Injectable()
 export class UserService {
@@ -17,13 +17,13 @@ export class UserService {
       });
       return createUser;
     } catch (error) {
-      console.log(error);
       let err = error as { code?: Number };
+      let errMsg = error as {message: string}
       if (err.code === 11000) {
         throw new ConflictException('email already registered.');
       }
 
-      throw err;
+      throw new InternalServerErrorException(errMsg);
     }
   }
 }
