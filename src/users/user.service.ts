@@ -3,6 +3,7 @@ import { RegisterDto } from 'src/auth/dto/registerUser.dto';
 import { User } from './schemas/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Error, Model } from 'mongoose';
+import { LogInUserDto } from 'src/auth/dto/logInUser.dto';
 
 @Injectable()
 export class UserService {
@@ -24,6 +25,15 @@ export class UserService {
       }
 
       throw new InternalServerErrorException(errMsg);
+    }
+  }
+
+  async findSingleUser (loginUserDto: LogInUserDto) {
+    try {
+      const findUser = await this.userModel.findOne({ email: loginUserDto?.email });
+      return findUser
+    } catch (error) {
+      throw new InternalServerErrorException(error);
     }
   }
 }
