@@ -6,12 +6,14 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './users/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { env } from 'node:process';
+import { AccountsModule } from './accounts/account.module';
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}),
     MongooseModule.forRoot(process.env.MONGO_URI_OFF ?? 'mongodb://localhost:27017/iBankdb'),
     AuthModule, 
     UserModule,
+    AccountsModule
   ],
   // controllers: [AppController],
   // providers: [AppService],

@@ -1,7 +1,9 @@
 export class UserDetails {
-    _id!: Object;
+    _id?: Object;
+    firstName?: string;
+    lastName?: string;
     email!: string;
     password!: string;
-    confirmPass!: string;
+    confirmPass?: string;
     role?: string;
 }
