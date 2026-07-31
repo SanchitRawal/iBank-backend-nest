@@ -5,11 +5,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './users/user.module';
 import { ConfigModule } from '@nestjs/config';
-
+import { env } from 'node:process';
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}),
-    MongooseModule.forRoot('mongodb://localhost:27017/iBankdb'),
+    MongooseModule.forRoot(process.env.MONGO_URI_OFF ?? 'mongodb://localhost:27017/iBankdb'),
     AuthModule, 
     UserModule,
   ],

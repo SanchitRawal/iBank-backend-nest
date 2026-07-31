@@ -4,6 +4,7 @@ import { User } from './schemas/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Error, Model } from 'mongoose';
 import { LogInUserDto } from 'src/auth/dto/logInUser.dto';
+import { UserDetails } from 'src/auth/dto/userDetails.dto';
 
 @Injectable()
 export class UserService {
@@ -34,6 +35,17 @@ export class UserService {
       return findUser
     } catch (error) {
       throw new InternalServerErrorException(error);
+    }
+  }
+
+  async findSingleUserAndUpdate (userDto: UserDetails) {
+    await this.userModel.findByIdAndUpdate(
+      userDto._id,
+      {$set: {password: userDto?.password}},
+      {new: true}
+    )
+    return {
+      message: "password updated succesfull"
     }
   }
 }

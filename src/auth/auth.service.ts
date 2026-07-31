@@ -4,6 +4,7 @@ import { RegisterDto } from './dto/registerUser.dto';
 import bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { LogInUserDto } from './dto/logInUser.dto';
+import { ForgotPassInUserDto } from './dto/forgot-pass.dto';
 
 @Injectable()
 export class AuthService {
@@ -44,5 +45,27 @@ export class AuthService {
       const token = await this.jwtService.signAsync(payload);
       return { ...payload, access: token };
     }
+  }
+
+  async forgot_pass (forgot_pass: ForgotPassInUserDto) {
+    if(!forgot_pass) {
+       throw new UnauthorizedException('email, password or confirm pass word is empty');
+    }
+    const userDetails = await this.userService.findSingleUser(forgot_pass);
+    if(!userDetails) {
+      throw new UnauthorizedException('invalid email please try again')
+    }
+    if(forgot_pass?.password !== forgot_pass?.confirmPass) {
+      throw new UnauthorizedException(`your password and confirm passWord don't match`)
+    }
+    let { password } = forgot_pass;
+    const saltRound = 10; 
+    forgot_pass.password = await bcrypt.hash(password, saltRound);
+    const payload = {
+      _id: userDetails?._id,
+      ...forgot_pass
+    }
+    const updateUser = await this.userService.findSingleUserAndUpdate(payload);
+    return updateUser
   }
 }
