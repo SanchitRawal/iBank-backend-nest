@@ -7,7 +7,9 @@ export type AccountDocument = HydratedDocument<Accounts>
 export class Accounts {
     @Prop()
     accountName?: string;
+    @Prop()
     currency?: string;
+    @Prop()
     balance?: string;
 }
 
