@@ -43,6 +43,9 @@ export class AccountController {
     return result;
   }
 
-  @Delete()
-  async deleteAccount() {}
+  @Delete(':id')
+  async deleteAccount(@Param('id') id:string) {
+    const result = await this.accountService.deleteAccount(id);
+    return result
+  }
 }

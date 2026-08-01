@@ -28,9 +28,9 @@ export class AccountsService {
   async getSingleAccountDetail(id?: string) {
     try {
       const getOneAccount = await this.accountModel.findById(id);
-      console.log(getOneAccount);
       return getOneAccount;
     } catch (error) {
+      console.log('dasdasda')
       throw new BadRequestException('unable to fetch the single account');
     }
   }
@@ -58,6 +58,18 @@ export class AccountsService {
       return updatedData;
     } catch (error) {
       throw new BadRequestException('unable to update the data');
+    }
+  }
+
+  async deleteAccount (id?: string) {
+    try {
+      const account = await this.accountModel.findByIdAndDelete(id);
+      if(!account) {
+        throw new BadRequestException(`record doesn't exists`)
+      }
+      return {messgae: ' record succesfully deleted'}
+    } catch (error) {
+      throw new BadRequestException('unable to delete the account details')
     }
   }
 }
