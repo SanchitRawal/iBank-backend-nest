@@ -27,20 +27,37 @@ export class AccountsService {
 
   async getSingleAccountDetail(id?: string) {
     try {
-        const getOneAccount = await this.accountModel.findById(id);
-        console.log(getOneAccount)
-        return getOneAccount
+      const getOneAccount = await this.accountModel.findById(id);
+      console.log(getOneAccount);
+      return getOneAccount;
     } catch (error) {
       throw new BadRequestException('unable to fetch the single account');
     }
   }
-  
-  async getAccountsList () {
+
+  async getAccountsList() {
     try {
       const list = await this.accountModel.find();
-      return list
+      return list;
     } catch (error) {
-      throw new BadRequestException('unablet to fetch the list of accounts')
+      throw new BadRequestException('unablet to fetch the list of accounts');
+    }
+  }
+
+  async partialAccountUpdate(id: string, accountUpdate: AccountsDto) {
+    if (!accountUpdate) {
+      throw new BadRequestException('there is no data to be updated');
+    }
+    try {
+      const updatedData = await this.accountModel.findByIdAndUpdate(
+        id,
+        accountUpdate,
+        { new: true, runValidators: true },
+      );
+      console.log(updatedData);
+      return updatedData;
+    } catch (error) {
+      throw new BadRequestException('unable to update the data');
     }
   }
 }

@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { AccountsService } from './account.service';
 import { AccountsDto } from './dto/account.dto';
 
@@ -6,7 +14,7 @@ import { AccountsDto } from './dto/account.dto';
 export class AccountController {
   constructor(private readonly accountService: AccountsService) {}
   @Get()
-  async getAccountsList () {
+  async getAccountsList() {
     const result = await this.accountService.getAccountsList();
     return result;
   }
@@ -23,9 +31,16 @@ export class AccountController {
     return result;
   }
 
-  @Patch()
-  async updateAccount() {
-    
+  @Patch(':id')
+  async updateAccount(
+    @Param('id') id: string,
+    @Body() accountUpdateData: AccountsDto,
+  ) {
+    const result = await this.accountService.partialAccountUpdate(
+      id,
+      accountUpdateData,
+    );
+    return result;
   }
 
   @Delete()
