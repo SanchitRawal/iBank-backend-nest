@@ -3,6 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Cards } from "./schema/cards.schema";
 import { Model } from "mongoose";
 import { CardsDto } from "./dto/cards.dto";
+import { Status } from "./cards.types";
 
 @Injectable()
 export class CardServices {
@@ -22,8 +23,9 @@ export class CardServices {
         if(!cardsDetails) {
             throw new BadRequestException('please enter some card details')
         }
+        const payload = {...cardsDetails, status: Status.Unfreeze}
         try {
-            const newCard = await this.cardsModel.create(cardsDetails);
+            const newCard = await this.cardsModel.create(payload);
             return newCard.save();
         } catch (error) {
             throw new BadRequestException('unable to create a card')

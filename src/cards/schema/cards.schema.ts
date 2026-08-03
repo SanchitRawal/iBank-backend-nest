@@ -13,6 +13,8 @@ export class Cards {
   expiry?: string;
   @Prop()
   cvv?: string;
+  @Prop()
+  status?: string;
 }
 
 export const CardsSchema = SchemaFactory.createForClass(Cards);

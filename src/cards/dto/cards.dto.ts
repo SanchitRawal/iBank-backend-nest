@@ -3,4 +3,5 @@ export class CardsDto {
   number?: string;
   expiry?: string;
   cvv?: string;
+  status?: string;
 }
