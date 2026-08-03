@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { env } from 'node:process';
 import { AccountsModule } from './accounts/account.module';
 import { CardsModule } from './cards/cards.module';
+import { TransactionModule } from './transactions/transaction.module';
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}),
@@ -15,7 +16,8 @@ import { CardsModule } from './cards/cards.module';
     AuthModule, 
     UserModule,
     AccountsModule,
-    CardsModule
+    CardsModule,
+    TransactionModule
   ],
   // controllers: [AppController],
   // providers: [AppService],
