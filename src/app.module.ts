@@ -10,6 +10,7 @@ import { AccountsModule } from './accounts/account.module';
 import { CardsModule } from './cards/cards.module';
 import { TransactionModule } from './transactions/transaction.module';
 import { BeneficiariesModule } from './beneficiaries/beneficiaries.module';
+import { NotificationModule } from './notifications/notification.module';
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}),
@@ -19,7 +20,8 @@ import { BeneficiariesModule } from './beneficiaries/beneficiaries.module';
     AccountsModule,
     CardsModule,
     TransactionModule,
-    BeneficiariesModule
+    BeneficiariesModule,
+    NotificationModule
   ],
   // controllers: [AppController],
   // providers: [AppService],
