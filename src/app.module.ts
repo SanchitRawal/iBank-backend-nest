@@ -9,6 +9,7 @@ import { env } from 'node:process';
 import { AccountsModule } from './accounts/account.module';
 import { CardsModule } from './cards/cards.module';
 import { TransactionModule } from './transactions/transaction.module';
+import { BeneficiariesModule } from './beneficiaries/beneficiaries.module';
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}),
@@ -17,7 +18,8 @@ import { TransactionModule } from './transactions/transaction.module';
     UserModule,
     AccountsModule,
     CardsModule,
-    TransactionModule
+    TransactionModule,
+    BeneficiariesModule
   ],
   // controllers: [AppController],
   // providers: [AppService],
