@@ -3,17 +3,20 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Beneficiaries } from './schema/beneficiaries.schema';
 import { Model } from 'mongoose';
 import { BeneficiariesDto } from './dto/beneficiaries.dto';
+import { User } from 'src/users/schemas/user.schema';
+import { first } from 'rxjs';
 
 @Injectable()
 export class BeneficiariesService {
   constructor(
     @InjectModel(Beneficiaries.name)
     private beneficiariesModel: Model<Beneficiaries>,
+    @InjectModel(User.name) private userModel: Model<User>
   ) {}
 
   async getList() {
     try {
-      return await this.beneficiariesModel.find();
+      return await this.beneficiariesModel.find().populate('userId', 'firstName');
     } catch (error) {
       throw new BadRequestException('unable to the benefiaries list');
     }
@@ -26,7 +29,7 @@ export class BeneficiariesService {
     try {
       const newBenefiaries =
         await this.beneficiariesModel.create(benefiariesDetails);
-      return await newBenefiaries.save();
+      return newBenefiaries.save();
     } catch (error) {
       throw new BadRequestException('unable to create  the beneficiaries');
     }

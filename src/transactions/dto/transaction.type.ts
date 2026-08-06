@@ -1,6 +1,9 @@
+import { Types } from "mongoose";
+
 export class TransactionDto {
-    fromAccountId?: string;
+    fromAccountId!: Types.ObjectId;
     toAccountId?: string;
     amount?: string;
     note?: string;
+    // userId!: Types.ObjectId;
 }

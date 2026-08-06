@@ -3,12 +3,17 @@ import { TransactionDto } from './dto/transaction.type';
 import { InjectModel } from '@nestjs/mongoose';
 import { Transactions } from './schema/transaction.schema';
 import { Model } from 'mongoose';
+import { User } from 'src/users/schemas/user.schema';
+import { Accounts } from 'src/accounts/schemas/account.schema';
 
 @Injectable()
 export class TransactionService {
   constructor(
     @InjectModel(Transactions.name)
-    private transactionModel: Model<Transactions>,
+    private transactionModel: Model<Transactions>, 
+    
+    @InjectModel(Accounts.name)
+    private accountsModel: Model<Accounts>,
   ) {}
 
   async newTransactionDetails(transactionDetails: TransactionDto) {
@@ -64,5 +69,17 @@ export class TransactionService {
         throw new BadRequestException('unable to delete the transaction')
     }
     return {message: ' transaction deleted succesfully'}
+  }
+
+  async transferTransaction () {
+    try {
+      const tranferDetails = await this.transactionModel.find().populate(
+        'fromAccountId'
+      )
+      console.log(JSON.stringify(tranferDetails, null, 2));
+      return tranferDetails;
+    } catch (error) {
+        throw new BadRequestException(error)
+    }
   }
 }

@@ -19,6 +19,11 @@ export class TransactionController {
     return this.transactionService.getTransactionsList();
   }
 
+  
+    @Get('transfer')
+    async transfer () {
+      return await this.transactionService.transferTransaction()
+    }
   @Get(':id')
   async getSingleTransaction(@Param('id') id: string) {
     return await this.transactionService.getSingleTransactionDetails(id);
@@ -39,8 +44,10 @@ export class TransactionController {
     return await this.transactionService.partialUpdate(id, transactionDetails);
   }
 
-  @Delete('id')
+  @Delete(':id')
   async removeTransaction(@Param('id') id: string) {
     return await this.transactionService.deleteTransaction(id);
   }
+
+  // transfer api
 }

@@ -3,11 +3,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Accounts } from './schemas/account.schema';
 import { Model } from 'mongoose';
 import { AccountsDto } from './dto/account.dto';
+import { User } from 'src/users/schemas/user.schema';
 
 @Injectable()
 export class AccountsService {
   constructor(
     @InjectModel(Accounts.name) private accountModel: Model<Accounts>,
+    @InjectModel(User.name) private userModel: Model<User>
   ) {}
 
   async createAccount(accountData: AccountsDto) {
@@ -37,7 +39,7 @@ export class AccountsService {
 
   async getAccountsList() {
     try {
-      const list = await this.accountModel.find();
+      const list = await this.accountModel.find().populate("userId");
       return list;
     } catch (error) {
       throw new BadRequestException('unablet to fetch the list of accounts');
