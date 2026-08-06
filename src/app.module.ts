@@ -11,6 +11,7 @@ import { CardsModule } from './cards/cards.module';
 import { TransactionModule } from './transactions/transaction.module';
 import { BeneficiariesModule } from './beneficiaries/beneficiaries.module';
 import { NotificationModule } from './notifications/notification.module';
+import { DashBoardModule } from './dashboard/dashBoard.module';
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}),
@@ -21,7 +22,8 @@ import { NotificationModule } from './notifications/notification.module';
     CardsModule,
     TransactionModule,
     BeneficiariesModule,
-    NotificationModule
+    NotificationModule,
+    DashBoardModule
   ],
   // controllers: [AppController],
   // providers: [AppService],
