@@ -1,4 +1,5 @@
 export class CardsDto {
+  accountId!: string;
   holderName?: string;
   number?: string;
   expiry?: string;
