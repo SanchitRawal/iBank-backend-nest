@@ -8,7 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
-import { TransactionDto } from './dto/transaction.type';
+import { TransactionDto } from './dto/transaction.dto';
 
 @Controller('transactions')
 export class TransactionController {
@@ -32,7 +32,7 @@ export class TransactionController {
   @Post()
   async createTransaction(@Body() transactionDetails: TransactionDto) {
     return await this.transactionService.newTransactionDetails(
-      transactionDetails,
+      transactionDetails
     );
   }
 

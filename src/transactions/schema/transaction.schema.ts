@@ -12,13 +12,6 @@ export class Transactions {
     //     required: true
     // })
     // userId!: Types.ObjectId;
-
-    @Prop()
-    amount?: string;
-
-    @Prop()
-    note?: string;
-
     @Prop({
         type: Types.ObjectId,
         ref: Accounts.name,
@@ -28,6 +21,31 @@ export class Transactions {
 
     @Prop()
     toAccountId?: string;
+
+    @Prop()
+    beneficiaryId?: Types.ObjectId;
+
+    @Prop()
+    cardId?: Types.ObjectId;
+
+    @Prop()
+    type?: string;
+
+    @Prop()
+    status?: string;
+
+    @Prop()
+    mode?: string;
+
+    @Prop()
+    transactionId?: string;
+
+    @Prop()
+    amount?: string;
+
+    @Prop()
+    note?: string;
+
 }
 
 export const TransactionSchema = SchemaFactory.createForClass(Transactions)

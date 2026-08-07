@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { TransactionDto } from './dto/transaction.type';
+import { TransactionDto } from './dto/transaction.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Transactions } from './schema/transaction.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { User } from 'src/users/schemas/user.schema';
 import { Accounts } from 'src/accounts/schemas/account.schema';
 
@@ -15,10 +15,16 @@ export class TransactionService {
     @InjectModel(Accounts.name)
     private accountsModel: Model<Accounts>,
   ) {}
-
+  
   async newTransactionDetails(transactionDetails: TransactionDto) {
     if (!transactionDetails) {
       throw new BadRequestException('add some data');
+    }
+    if(typeof transactionDetails?.cardId === 'string') {
+        transactionDetails.cardId = new Types.ObjectId(transactionDetails.cardId);
+    }
+    if(typeof transactionDetails?.fromAccountId === 'string') {
+      transactionDetails.fromAccountId = new Types.ObjectId(transactionDetails.fromAccountId)
     }
     try {
       const newTransaction =
