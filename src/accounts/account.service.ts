@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Accounts } from './schemas/account.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { AccountsDto } from './dto/account.dto';
 import { User } from 'src/users/schemas/user.schema';
 
@@ -9,7 +9,7 @@ import { User } from 'src/users/schemas/user.schema';
 export class AccountsService {
   constructor(
     @InjectModel(Accounts.name) private accountModel: Model<Accounts>,
-    @InjectModel(User.name) private userModel: Model<User>
+    @InjectModel(User.name) private userModel: Model<User>,
   ) {}
 
   async createAccount(accountData: AccountsDto) {
@@ -27,19 +27,40 @@ export class AccountsService {
     }
   }
 
-  async getSingleAccountDetail(id?: string) {
+  async getSingleAccountDetail(id?: Types.ObjectId) {
     try {
-      const getOneAccount = await this.accountModel.findById(id);
+      const [getOneAccount] = await this.accountModel.aggregate([
+        {
+          $match: {
+            _id: new Types.ObjectId(id),
+          },
+        },
+        {
+          $lookup: {
+            from: 'cards',
+            localField: '_id',
+            foreignField: 'accountId',
+            as: 'cards',
+          },
+        },
+        {
+          $lookup: {
+            from: 'transactions',
+            localField: '_id',
+            foreignField: 'fromAccountId',
+            as: 'transactions',
+          },
+        },
+      ]);
       return getOneAccount;
     } catch (error) {
-      console.log('dasdasda')
       throw new BadRequestException('unable to fetch the single account');
     }
   }
 
   async getAccountsList() {
     try {
-      const list = await this.accountModel.find().populate("userId");
+      const list = await this.accountModel.find().populate('userId');
       return list;
     } catch (error) {
       throw new BadRequestException('unablet to fetch the list of accounts');
@@ -63,15 +84,15 @@ export class AccountsService {
     }
   }
 
-  async deleteAccount (id?: string) {
+  async deleteAccount(id?: string) {
     try {
       const account = await this.accountModel.findByIdAndDelete(id);
-      if(!account) {
-        throw new BadRequestException(`record doesn't exists`)
+      if (!account) {
+        throw new BadRequestException(`record doesn't exists`);
       }
-      return {messgae: ' record succesfully deleted'}
+      return { messgae: ' record succesfully deleted' };
     } catch (error) {
-      throw new BadRequestException('unable to delete the account details')
+      throw new BadRequestException('unable to delete the account details');
     }
   }
 }

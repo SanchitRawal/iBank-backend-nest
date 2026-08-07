@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { AccountsService } from './account.service';
 import { AccountsDto } from './dto/account.dto';
+import { Types } from 'mongoose';
 
 @Controller('account')
 export class AccountController {
@@ -20,7 +21,7 @@ export class AccountController {
   }
 
   @Get(':id')
-  async getOneAccount(@Param('id') id: string) {
+  async getOneAccount(@Param('id') id: Types.ObjectId) {
     const result = await this.accountService.getSingleAccountDetail(id);
     return result;
   }
