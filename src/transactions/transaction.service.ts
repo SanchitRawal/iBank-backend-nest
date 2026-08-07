@@ -10,21 +10,23 @@ import { Accounts } from 'src/accounts/schemas/account.schema';
 export class TransactionService {
   constructor(
     @InjectModel(Transactions.name)
-    private transactionModel: Model<Transactions>, 
-    
+    private transactionModel: Model<Transactions>,
+
     @InjectModel(Accounts.name)
     private accountsModel: Model<Accounts>,
   ) {}
-  
+
   async newTransactionDetails(transactionDetails: TransactionDto) {
     if (!transactionDetails) {
       throw new BadRequestException('add some data');
     }
-    if(typeof transactionDetails?.cardId === 'string') {
-        transactionDetails.cardId = new Types.ObjectId(transactionDetails.cardId);
+    if (typeof transactionDetails?.cardId === 'string') {
+      transactionDetails.cardId = new Types.ObjectId(transactionDetails.cardId);
     }
-    if(typeof transactionDetails?.fromAccountId === 'string') {
-      transactionDetails.fromAccountId = new Types.ObjectId(transactionDetails.fromAccountId)
+    if (typeof transactionDetails?.fromAccountId === 'string') {
+      transactionDetails.fromAccountId = new Types.ObjectId(
+        transactionDetails.fromAccountId,
+      );
     }
     try {
       const newTransaction =
@@ -45,8 +47,8 @@ export class TransactionService {
   }
 
   async partialUpdate(id: string, transactionDetails: TransactionDto) {
-    if(!transactionDetails) {
-        throw new BadRequestException('add some to update')
+    if (!transactionDetails) {
+      throw new BadRequestException('add some to update');
     }
     try {
       const transaction = await this.transactionModel.findByIdAndUpdate(
@@ -56,36 +58,40 @@ export class TransactionService {
       );
       return transaction;
     } catch (error) {
-        throw new BadRequestException('unable to update the transaction')
+      throw new BadRequestException('unable to update the transaction');
     }
   }
 
-  async getSingleTransactionDetails (id: string) {
+  async getSingleTransactionDetails(id: string) {
     try {
-        const transaction = await this.transactionModel.findById(id);
-        return transaction;
+      const transaction = await this.transactionModel.findById(id);
+      return transaction;
     } catch (error) {
-        throw new BadRequestException('unable to fetch the data.')
+      throw new BadRequestException('unable to fetch the data.');
     }
   }
 
-  async deleteTransaction (id: string) {
+  async deleteTransaction(id: string) {
     const transaction = await this.transactionModel.findByIdAndDelete(id);
-    if(!transaction) {
-        throw new BadRequestException('unable to delete the transaction')
+    if (!transaction) {
+      throw new BadRequestException('unable to delete the transaction');
     }
-    return {message: ' transaction deleted succesfully'}
+    return { message: ' transaction deleted succesfully' };
   }
 
-  async transferTransaction () {
+  async transferTransaction() {
     try {
-      const tranferDetails = await this.transactionModel.find().populate(
-        'fromAccountId'
-      )
+      const tranferDetails = await this.transactionModel
+        .find()
+        .populate('fromAccountId');
       console.log(JSON.stringify(tranferDetails, null, 2));
       return tranferDetails;
     } catch (error) {
-        throw new BadRequestException(error)
+      throw new BadRequestException(error);
     }
+  }
+
+  async getAnalaytics() {
+    const creditTransactions = await this.transactionModel.find({type: 'CREDIT'});
   }
 }

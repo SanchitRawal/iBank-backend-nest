@@ -49,5 +49,10 @@ export class TransactionController {
     return await this.transactionService.deleteTransaction(id);
   }
 
+  @Get('analytics')
+  async getAnalysis () {
+    return await this.transactionService.getAnalaytics();
+  }
+
   // transfer api
 }
