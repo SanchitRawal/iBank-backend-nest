@@ -106,7 +106,7 @@ export class TransactionService {
               ],
             },
           },
-          totalExpnece: {
+          totalExpense: {
             $sum: {
               $cond: [{ $eq: ['$mode', 'DEBIT'] }, { $toDouble: '$amount' }, 0],
             },
