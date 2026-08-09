@@ -40,6 +40,7 @@ export class TransactionService {
   async getTransactionsList() {
     try {
       const list = await this.transactionModel.find();
+      console.log(list);
       return list;
     } catch (error) {
       throw new BadRequestException('unable to fetch the transaction list');
@@ -92,6 +93,42 @@ export class TransactionService {
   }
 
   async getAnalaytics() {
-    const creditTransactions = await this.transactionModel.find({type: 'CREDIT'});
+    const [result] = await this.transactionModel.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalIncome: {
+            $sum: {
+              $cond: [
+                { $eq: ['$mode', 'CREDIT'] },
+                { $toDouble: '$amount' },
+                0,
+              ],
+            },
+          },
+          totalExpnece: {
+            $sum: {
+              $cond: [{ $eq: ['$mode', 'DEBIT'] }, { $toDouble: '$amount' }, 0],
+            },
+          },
+          totalTransaction: {
+            $sum: 1,
+          },
+          averageTransaction: {
+            $avg: '$amount',
+          },
+        },
+      },
+    ]);
+    const totalIncome = result?.totalIncome ?? 0;
+    const totalExpense = result?.totalExpense ?? 0;
+
+    return {
+      totalIncome,
+      totalExpense,
+      totalNetIncome: totalIncome - totalExpense,
+      totalTransactions: result?.totalTransaction ?? 0,
+      averageTransaction: result?.averageTransaction ?? 0,
+    };
   }
 }

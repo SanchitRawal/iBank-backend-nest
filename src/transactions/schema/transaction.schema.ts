@@ -4,7 +4,7 @@ import { Accounts } from "src/accounts/schemas/account.schema";
 import { User } from "src/users/schemas/user.schema";
 
 export type TransactionDocument = HydratedDocument<Transactions>
-@Schema()
+@Schema({timestamps: true})
 export class Transactions {
     // @Prop({
     //     type: Types.ObjectId,

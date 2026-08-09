@@ -19,11 +19,16 @@ export class TransactionController {
     return this.transactionService.getTransactionsList();
   }
 
-  
-    @Get('transfer')
-    async transfer () {
-      return await this.transactionService.transferTransaction()
-    }
+  @Get('transfer')
+  async transfer() {
+    return await this.transactionService.transferTransaction();
+  }
+
+  @Get('analytics')
+  async getAnalysis() {
+    return this.transactionService.getAnalaytics();
+  }
+
   @Get(':id')
   async getSingleTransaction(@Param('id') id: string) {
     return await this.transactionService.getSingleTransactionDetails(id);
@@ -32,7 +37,7 @@ export class TransactionController {
   @Post()
   async createTransaction(@Body() transactionDetails: TransactionDto) {
     return await this.transactionService.newTransactionDetails(
-      transactionDetails
+      transactionDetails,
     );
   }
 
@@ -47,11 +52,6 @@ export class TransactionController {
   @Delete(':id')
   async removeTransaction(@Param('id') id: string) {
     return await this.transactionService.deleteTransaction(id);
-  }
-
-  @Get('analytics')
-  async getAnalysis () {
-    return await this.transactionService.getAnalaytics();
   }
 
   // transfer api
