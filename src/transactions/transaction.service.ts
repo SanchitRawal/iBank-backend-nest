@@ -5,6 +5,7 @@ import { Transactions } from './schema/transaction.schema';
 import { Model, Types } from 'mongoose';
 import { User } from 'src/users/schemas/user.schema';
 import { Accounts } from 'src/accounts/schemas/account.schema';
+import { TransactionHistoryDto } from './dto/transactionHistory.dto';
 
 @Injectable()
 export class TransactionService {
@@ -131,4 +132,9 @@ export class TransactionService {
       averageTransaction: result?.averageTransaction ?? 0,
     };
   }
+
+  async getTransactionHistories (fiters: TransactionHistoryDto) {
+
+  } 
+
 }
