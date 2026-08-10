@@ -93,4 +93,70 @@ export class AccountsService {
       throw new BadRequestException('unable to delete the account details');
     }
   }
+
+  async getAccountStatement(id: string) {
+    try {
+      const [statement] = await this.accountModel.aggregate([
+        {
+          $match: {
+            _id: new Types.ObjectId(id),
+          },
+        },
+        {
+          $lookup: {
+            from: 'transactions',
+            localField: '_id',
+            foreignField: 'fromAccountId',
+            as: 'transactions',
+          },
+        },
+        {
+          $addFields: {
+            totalIncome: {
+              $sum: {
+                $map: {
+                  $input: {
+                    $filter: {
+                      input: '$transactions',
+                      as : '$transactions',
+                      cond: {
+                        $eq: ['$transaction.type', 'CREDIT'],
+                      }
+                    }
+                  },
+                  as: 'transactions',
+                  in: {
+                    $toDouble: '$$transactions.amount',
+                  }
+                }
+              }
+            },
+            totalExpense: {
+              $sum: {
+                $map: {
+                  input: {
+                    $filter: {
+                      input: '$transactions',
+                      as: 'transaction',
+                      cond: {
+                        $eq: ['$$transaction.type', 'DEBIT'],
+                      }
+                    }
+                  },
+                  as: 'transaction',
+                  in: {
+                    $toDouble: '$$transaction.amount',
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]);
+
+      return statement;
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
+  }
 }

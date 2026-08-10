@@ -26,6 +26,11 @@ export class AccountController {
     return result;
   }
 
+  @Get(':id/statement')
+  async getAccountStatement (@Param('id') id: string) {
+    return await this.accountService.getAccountStatement(id)
+  }
+
   @Post()
   async createAccount(@Body() accountsDetails: AccountsDto) {
     const result = await this.accountService.createAccount(accountsDetails);
