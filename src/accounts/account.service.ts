@@ -13,7 +13,6 @@ export class AccountsService {
   ) {}
 
   async createAccount(accountData: AccountsDto) {
-    console.log(accountData, 'accountsData');
     if (!accountData) {
       throw new BadRequestException(
         'please add on the data name, currency or balance',
@@ -77,7 +76,6 @@ export class AccountsService {
         accountUpdate,
         { new: true, runValidators: true },
       );
-      console.log(updatedData);
       return updatedData;
     } catch (error) {
       throw new BadRequestException('unable to update the data');

@@ -41,7 +41,6 @@ export class TransactionService {
   async getTransactionsList() {
     try {
       const list = await this.transactionModel.find();
-      console.log(list);
       return list;
     } catch (error) {
       throw new BadRequestException('unable to fetch the transaction list');
@@ -86,7 +85,6 @@ export class TransactionService {
       const tranferDetails = await this.transactionModel
         .find()
         .populate('fromAccountId');
-      console.log(JSON.stringify(tranferDetails, null, 2));
       return tranferDetails;
     } catch (error) {
       throw new BadRequestException(error);
