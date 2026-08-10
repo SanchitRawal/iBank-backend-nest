@@ -15,6 +15,10 @@ export class TransactionHistoryDto {
 
   @IsOptional()
   @IsString()
+  mode?: string;
+
+  @IsOptional()
+  @IsString()
   status?: string;
 
   @IsOptional()

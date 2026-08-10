@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
 } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { TransactionDto } from './dto/transaction.dto';
@@ -32,8 +33,10 @@ export class TransactionController {
   }
 
   @Get('hisotry')
-  async getTransactionHistory(@Query() filters: TransactionHistoryDto) {
-    return await this.transactionService.getTransactionHistories(filters);
+  async getTransactionHistory(
+    @Req() req,
+    @Query() filters: TransactionHistoryDto) {
+    return await this.transactionService.getTransactionHistories(req.user.userId, filters);
   }
 
   @Get(':id')

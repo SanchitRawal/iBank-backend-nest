@@ -131,8 +131,105 @@ export class TransactionService {
     };
   }
 
-  async getTransactionHistories (fiters: TransactionHistoryDto) {
+  async getTransactionHistories(
+    userId: string,
+    filters: TransactionHistoryDto,
+  ) {
+    try {
+      const {
+        page = 1,
+        limit = 10,
+        mode,
+        status,
+        fromDate,
+        toDate,
+        minAmount,
+        maxAmount,
+        search,
+        sort,
+      } = filters;
 
-  } 
+      const query: any = {
+        userId: new Types.ObjectId(userId),
+      };
 
+      if (mode) {
+        query.mode = mode;
+      }
+
+      if (status) {
+        query.status = status;
+      }
+
+      if (fromDate || toDate) {
+        query.createdAt = {};
+        if (fromDate) {
+          query.createdAt.$gte = new Date(fromDate);
+        }
+
+        if (toDate) {
+          const endDate = new Date(toDate);
+          endDate.setHours(23, 59, 59, 999);
+
+          query.createdAt.$lte = endDate;
+        }
+      }
+
+      if (maxAmount || minAmount) {
+        query.amount = {};
+
+        if (minAmount) {
+          query.amount.$gte = Number(minAmount);
+        }
+
+        if (maxAmount) {
+          query.amount.$lte = Number(maxAmount);
+        }
+      }
+
+      if (search) {
+        query.$or = [
+          {
+            transactionId: {
+              $regex: search,
+              $option: '1',
+            },
+          },
+          {
+            note: {
+              $regex: search,
+              $options: '1',
+            },
+          },
+        ];
+      }
+
+      const skip = (page - 1) * limit;
+
+      const [sortField = 'createdAt', sortOrder = 'desc'] =
+        sort || 'createdAt:desc'.split(':');
+
+      const total = await this.transactionModel.countDocuments(query);
+
+      const transaction = await this.transactionModel
+        .find(query)
+        .skip(skip)
+        .limit(limit)
+        .sort(sortField);
+
+      return {
+        data: transaction,
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages: Math.ceil(total / limit),
+          hasNextPage: page < Math.ceil(total / limit),
+          hasPreviousPage: page > 1,
+        },
+      };
+    } catch (error) {
+      throw new BadRequestException('unable to fetch the history');
+    }
+  }
 }
